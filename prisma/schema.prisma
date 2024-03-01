@@ -1,0 +1,44 @@
+generator client {
+  provider = "prisma-kysely"
+  output   = ".."
+  fileName = "types.ts"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum Methods {
+  USERNAME_PASSWORD
+  PGP
+}
+
+model Owner {
+  id       String  @id @default(uuid())
+  username String  @unique
+  password String
+  pgp_key  String?
+  apps     App[]
+}
+
+model User {
+  id       String  @id @default(uuid())
+  username String
+  password String
+  pgp_key  String?
+  app_id   String
+  app      App     @relation(fields: [app_id], references: [id])
+
+  @@unique([username, app_id])
+}
+
+model App {
+  id           String  @id @default(uuid())
+  owner        Owner   @relation(fields: [user_id], references: [id])
+  user_id      String
+  api_key      String
+  redirect_url String
+  methods      Methods
+  users        User[]
+}
