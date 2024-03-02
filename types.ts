@@ -10,20 +10,20 @@ export const Methods = {
 } as const;
 export type Methods = (typeof Methods)[keyof typeof Methods];
 export type App = {
-    id: string;
+    id: Generated<string>;
     user_id: string;
     api_key: string;
     redirect_url: string;
     methods: Methods;
 };
 export type Owner = {
-    id: string;
+    id: Generated<string>;
     username: string;
     password: string;
     pgp_key: string | null;
 };
 export type User = {
-    id: string;
+    id: Generated<string>;
     username: string;
     password: string;
     pgp_key: string | null;

@@ -9,13 +9,8 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-enum Methods {
-  USERNAME_PASSWORD
-  PGP
-}
-
 model Owner {
-  id       String  @id @default(uuid())
+  id       String  @id @default(dbgenerated("uuid_generate_v4()"))
   username String  @unique
   password String
   pgp_key  String?
@@ -23,7 +18,7 @@ model Owner {
 }
 
 model User {
-  id       String  @id @default(uuid())
+  id       String  @id @default(dbgenerated("uuid_generate_v4()"))
   username String
   password String
   pgp_key  String?
@@ -34,11 +29,16 @@ model User {
 }
 
 model App {
-  id           String  @id @default(uuid())
-  owner        Owner   @relation(fields: [user_id], references: [id])
+  id           String  @id @default(dbgenerated("uuid_generate_v4()"))
   user_id      String
   api_key      String
   redirect_url String
   methods      Methods
+  owner        Owner   @relation(fields: [user_id], references: [id])
   users        User[]
+}
+
+enum Methods {
+  USERNAME_PASSWORD
+  PGP
 }
